@@ -211,3 +211,107 @@ af = ListMc(bf) \
     .to_save("mc1.txt")
 
 
+###################################################################################################
+# 以下は使い型の例
+# テーブルのカラム名と型からJavaのsetterとgetter作り
+# サンプル入力用
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  is_positive boolean not null DEFAULT TRUE,
+  col_val REAL,
+  obj_val text,
+  ins_date timestamp with time zone not null,
+  del_flag BOOLEAN not null DEFAULT FALSE
+  
+
+ーーー 1行目のテーブル定義 より ーーー
+private int id;
+public setId(int id) {
+    this.id = id;
+}
+public int getId() {
+    return id;
+}
+
+
+import sys
+import re
+from mylib.mc.op_list import ListMc
+
+j_type = {
+    "INTEGER": "int",
+    "REAL": "float",
+    "text": "String",
+    "BOOLEAN": "boolean",
+    "timestamp": "Date",
+}
+
+def cnv_camel_case(v_name):
+    sns = v_name.lower().split("_")
+    c_name = sns[0]
+    for name in sns[1:]:
+        c_name += name.capitalize()
+    return c_name
+
+bf = sys.stdin.read().split("\n")
+
+af = ListMc(bf) \
+    .map(lambda x: re.match(".*?([a-zA-Z_]+) (.*?)[\s,].*", x)) \
+    .map(lambda y: (y.group(1), y.group(2)) if y else None) \
+    .filter(lambda x: x != None) \
+    .reduce(lambda acc, cur, i, arr:
+        [
+           acc.append(f'ーーー {i+1}行目のテーブル定義より ーーー'),
+           acc.append(f'private {j_type.get(arr[i][1], "XXX")} {arr[i][0].lower()};'),
+           acc.append(f'public set{arr[i][0][0].upper() + arr[i][0][1:]}({arr[i][1]} {arr[i][0].lower()}) {{'),
+           acc.append(f'    this.{arr[i][0].lower()} = {arr[i][0].lower()};'),
+           acc.append('}'),
+           acc.append(f'public {j_type.get(arr[i][1], "XXX")} get{arr[i][0][0].upper() + arr[i][0][1:]}() {{'),
+           acc.append(f'    return {arr[i][0].lower()};'),
+           acc.append('}'),
+        ]
+    ) \
+    .to_list().join("\n") \
+    .to_save("mc2.txt")
+    
+
+----------------------------------------------------------------
+import sys
+import re
+from mylib.mc.op_list import ListMc
+
+j_type = {
+    "INTEGER": "int",
+    "REAL": "float",
+    "text": "String",
+    "BOOLEAN": "boolean",
+    "timestamp": "Date",
+}
+
+def cnv_camel_case(v_name):
+    p_c_name = ListMc(v_name.lower().split("_")).map(lambda s: s.capitalize()) \
+           .to_list().join("").output_str
+    return p_c_name[0].lower() + p_c_name[1:]
+
+bf = sys.stdin.read().split("\n")
+
+af = ListMc(bf) \
+    .map(lambda x: re.match(".*?([a-zA-Z_]+) (.*?)[\s,].*", x)) \
+    .map(lambda y: (y.group(1), y.group(2)) if y else None) \
+    .filter(lambda x: x != None) \
+    .map(lambda x: (cnv_camel_case(x[0]), j_type.get(x[1], "XXX"))) \
+    .reduce(lambda acc, cur, i, arr:
+        [           
+           acc.append(f'ーーー {i+1}行目のテーブル定義より ーーー'),
+           acc.append(f'private {arr[i][1]} {arr[i][0]};'),
+           acc.append(f'public set{arr[i][0].capitalize()}({arr[i][1]} {arr[i][0]}) {{'),
+           acc.append(f'    this.{arr[i][0]} = {arr[i][0]};'),
+           acc.append('}'),
+           acc.append(f'public {arr[i][1]} get{arr[i][0][0].upper() + arr[i][0][1:]}() {{'),
+           acc.append(f'    return {arr[i][0]};'),
+           acc.append('}'),
+        ]
+    ) \
+    .to_list().join("\n") \
+    .to_save("mc2.txt")
+
+

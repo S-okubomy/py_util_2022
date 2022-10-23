@@ -1,21 +1,21 @@
 ーーー 1行目のテーブル定義 ーーー
-カラム名は、idです。
-型は、INTEGERです。
+あいうカラム名は、idです。
+あああ型は、INTEGERです。
 ーーー 2行目のテーブル定義 ーーー
-カラム名は、is_positiveです。
-型は、BOOLEANです。
+あいうカラム名は、is_positiveです。
+あああ型は、BOOLEANです。
 ーーー 3行目のテーブル定義 ーーー
-カラム名は、exp_valです。
-型は、TEXTです。
+あいうカラム名は、exp_valです。
+あああ型は、TEXTです。
 ーーー 4行目のテーブル定義 ーーー
-カラム名は、obj_valです。
-型は、TEXTです。
+あいうカラム名は、obj_valです。
+あああ型は、TEXTです。
 ーーー 5行目のテーブル定義 ーーー
-カラム名は、ins_dateです。
-型は、TIMESTAMPです。
+あいうカラム名は、ins_dateです。
+あああ型は、TIMESTAMPです。
 ーーー 6行目のテーブル定義 ーーー
-カラム名は、update_dateです。
-型は、TIMESTAMPです。
+あいうカラム名は、update_dateです。
+あああ型は、TIMESTAMPです。
 ーーー 7行目のテーブル定義 ーーー
-カラム名は、del_flagです。
-型は、BOOLEANです。
+あいうカラム名は、del_flagです。
+あああ型は、BOOLEANです。

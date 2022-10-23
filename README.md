@@ -39,7 +39,75 @@ af = ListMc(bf) \
     .to_save("mc1.txt")
 ```
 
-## other 
+### 例1
+```
+# 以下は使い方の例
+# テーブルのカラム名と型からJavaのsetterとgetter作り
+
+# 「mylib」ディレクトリと同じ階層で、Pythonインタプリタを起動
+$ python3
+
+# 作ったUtilを読み込み
+import sys
+import re
+from mylib.mc.op_list import ListMc
+
+j_type = {
+    "INTEGER": "int",
+    "REAL": "float",
+    "text": "String",
+    "BOOLEAN": "boolean",
+    "timestamp": "Date",
+}
+
+def cnv_camel_case(v_name):
+    p_c_name = ListMc(v_name.lower().split("_")).map(lambda s: s.capitalize()) \
+           .to_list().join("").output_str
+    return p_c_name[0].lower() + p_c_name[1:]
+
+# （例）標準入力で以下の文字列読み取り
+bf = sys.stdin.read().split("\n")
+# サンプルの標準入力用
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  is_positive boolean not null DEFAULT TRUE,
+  col_val REAL,
+  obj_val text,
+  ins_date timestamp with time zone not null,
+  del_flag BOOLEAN not null DEFAULT FALSE
+
+# 上記のお試し文字列コピペしたら「ctrl」+「D」を押して標準入力終了する
+
+# 以下のコードを貼り付けます。
+# (「exam1.txt」と言うファイルが作成されます)
+af = ListMc(bf) \
+    .map(lambda x: re.match(".*?([a-zA-Z_]+) (.*?)[\s,].*", x)) \
+    .map(lambda y: (y.group(1), y.group(2)) if y else None) \
+    .filter(lambda x: x != None) \
+    .map(lambda x: (cnv_camel_case(x[0]), j_type.get(x[1], "XXX"))) \
+    .reduce(lambda acc, cur, i, arr:
+        [           
+           acc.append(f'ーーー {i+1}行目のテーブル定義より ーーー'),
+           acc.append(f'private {arr[i][1]} {arr[i][0]};'),
+           acc.append(f'public set{arr[i][0].capitalize()}({arr[i][1]} {arr[i][0]}) {{'),
+           acc.append(f'    this.{arr[i][0]} = {arr[i][0]};'),
+           acc.append('}'),
+           acc.append(f'public {arr[i][1]} get{arr[i][0][0].upper() + arr[i][0][1:]}() {{'),
+           acc.append(f'    return {arr[i][0]};'),
+           acc.append('}'),
+        ]
+    ) \
+    .to_list().join("\n") \
+    .to_save("exam1.txt")
+
+```
+
+### other 
+```
+# Pythonのインタラクティブシェルで打ったコマンドをファイルに保存
+import readline
+readline.write_history_file('history1.py')
+```
+
 ### …or create a new repository on the command line
 echo "# test_rust_2021" >> README.md  
 git init  
