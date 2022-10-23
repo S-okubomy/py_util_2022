@@ -31,8 +31,8 @@ af = ListMc(bf) \
     .reduce(lambda acc, cur, i, arr:
         [
             acc.append(f'ーーー {i+1}行目のテーブル定義 ーーー'),
-    	      acc.append(f'カラム名は、{arr[i][0].lower()}です。'),
-    	      acc.append(f'型は、{arr[i][1].upper()}です。'),
+            acc.append(f'カラム名は、{arr[i][0].lower()}です。'),
+            acc.append(f'型は、{arr[i][1].upper()}です。'),
         ]
     ) \
     .to_list().join("\n") \
