@@ -61,9 +61,9 @@ j_type = {
 }
 
 def cnv_camel_case(v_name):
-    p_c_name = ListMc(v_name.lower().split("_")).map(lambda s: s.capitalize()) \
-           .to_list().join("").output_str
-    return p_c_name[0].lower() + p_c_name[1:]
+    return ListMc(v_name.lower().split("_")) \
+        .reduce(lambda acc, cur, i, arr: acc.append(cur.capitalize()) if i !=0 else acc.append(cur)) \
+        .to_list().join("").output_str
 
 # （例）標準入力で以下の文字列読み取り
 bf = sys.stdin.read().split("\n")

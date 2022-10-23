@@ -287,10 +287,15 @@ j_type = {
     "timestamp": "Date",
 }
 
-def cnv_camel_case(v_name):
+def bk_cnv_camel_case(v_name):
     p_c_name = ListMc(v_name.lower().split("_")).map(lambda s: s.capitalize()) \
            .to_list().join("").output_str
     return p_c_name[0].lower() + p_c_name[1:]
+
+def cnv_camel_case(v_name):
+    return ListMc(v_name.lower().split("_")) \
+        .reduce(lambda acc, cur, i, arr: acc.append(cur.capitalize()) if i !=0 else acc.append(cur)) \
+        .to_list().join("").output_str
 
 bf = sys.stdin.read().split("\n")
 
