@@ -21,6 +21,8 @@ $ python3
   del_flag boolean not null DEFAULT FALSE
 
 # 上記のお試し文字列コピペしたら「ctrl」+「D」を押して標準入力終了する
+
+# 以下のコードを貼り付けます。
 # (「mc1.txt」と言うファイルが作成されます)
 af = ListMc(bf) \
     .map(lambda x: re.match(".*?([a-zA-Z_]+) (.*?)[\s,].*", x)) \
