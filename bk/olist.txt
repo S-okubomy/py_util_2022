@@ -1,0 +1,14 @@
+テーブル名は、study_qa1で、
+カラム名はidで、型はINTEGERです。
+テーブル名は、study_qa1で、
+カラム名はis_positiveで、型はbooleanです。
+テーブル名は、study_qa1で、
+カラム名はexp_valで、型はtextです。
+テーブル名は、study_qa1で、
+カラム名はobj_valで、型はtextです。
+テーブル名は、study_qa1で、
+カラム名はins_dateで、型はtimestampです。
+テーブル名は、study_qa1で、
+カラム名はupdate_dateで、型はtimestampです。
+テーブル名は、study_qa1で、
+カラム名はdel_flagで、型はbooleanです。

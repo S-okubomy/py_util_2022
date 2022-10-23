@@ -1,0 +1,213 @@
+●python抽出
+import sys
+import re
+import pandas as pd
+pd.set_option('display.max_rows', None)
+s = pd.Series(sys.stdin.read().split("\n"))
+s2=s.map(lambda x: re.match(".*git clone(.*).*", x).group(1) if re.match(".*git clone(.*).*", x) else "")
+s2=s.map(lambda x: (lambda y: y.group(1) if y else "")(re.match(".*git clone https:(.*)\.git.*", x)))
+s2[s2 != ""]
+s2=s.map(lambda x: (lambda y: y.group(1) if y else None)(re.match(".*git clone https:(.*)\.git.*", x))).dropna()
+s2.to_csv("test1.txt", index=False)
+
+
+import sys
+import re
+import pandas as pd
+pd.set_option('display.max_rows', None)
+bf = pd.Series(sys.stdin.read().split("\n"))
+print(bf)
+af=bf.map(lambda x: re.match(".*git clone https:(.*)\.git.*", x)).map(lambda x: x.group(1) if x else None).dropna()
+af.to_csv("test2.txt", index=False)
+
+af = af.tolist()
+
+●ケース1:  カラム名と型から文章を作る
+CREATE TABLE IF NOT EXISTS study_qa1
+(
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  is_positive boolean not null DEFAULT TRUE,
+  exp_val text,
+  obj_val text,
+  ins_date timestamp with time zone not null,
+  update_date timestamp with time zone not null,
+  del_flag boolean not null DEFAULT FALSE
+);
+
+exp)
+テーブル名は、study_qa1で、
+1つ目のカラム名はidで、型はintです。
+テーブル名は、study_qa1で、
+2つ目のカラム名はis_positiveで、型はboolです。
+
+
+import sys
+import re
+import pandas as pd
+pd.set_option('display.max_rows', 100)
+bf = pd.Series(sys.stdin.read().split("\n"))
+
+af = bf.map(lambda x: re.match("  (.*?) (.*?)[\s,].*", x))\
+.map(lambda y: f'テーブル名は、study_qa1で、\n\
+カラム名は{y.group(1)}で、型は{y.group(2)}です。\n' if y else None).dropna().tolist()
+
+with open('olist.txt', 'w', encoding='utf-8', newline='\n') as f:
+    f.writelines(af)
+
+●python メソッドチェーン化
+https://dawn.hateblo.jp/entry/2019/02/27/131547
+
+
+class i(object):
+    def __init__(self, iterator):
+        self.iterator = iterator
+    def map(self, func):
+        return i(map(func, self.iterator))
+    def filter(self, func):
+        return i(filter(func, self.iterator))
+    def to_list(self):
+        return list(self.iterator)
+
+
+i([2,1,15,-4,-5,-12]).map(lambda x: x*2).filter(lambda x: x <= 10).to_list()
+
+somefunc1 = lambda x: 'even' if x % 2 == 0 else 'odd'
+somecondition = lambda x: True if 'even' else False
+somefunc2 = lambda x: x + 'add test'
+
+i([1,2,3,4,4,5,6]).map(somefunc1)\
+                         .filter(somecondition)\
+                         .map(somefunc2)\
+                         .to_list()
+
+import sys
+data = sys.stdin.read()
+print(data)
+
+
+●javascript見本コード
+bf = fs.readFileSync("/dev/stdin", "utf-8").split("\n");
+af = bf.map(x => x.charAt(0).toUpperCase() + x.slice(1).toLowerCase()).reduce((acc, cur, i, arr) => {
+  acc.push(`		public void add${arr[i]}(String ${arr[i].toLowerCase()}) {`);
+  acc.push(`			this.${arr[i].toLowerCase()}.add(${arr[i].toLowerCase()});`);
+  acc.push(`		}`);
+  return acc;
+}, []);
+fs.writeFileSync("./o1.txt", af.join("\n"));
+
+
+
+●pythonメソッドチェーン用のクラス
+
+import itertools
+
+class i(object):
+    def __init__(self, iterator):
+        self.iterator = iterator
+        self.output_list = []
+        self.output_str = ""
+    def map(self, func):
+        return i(map(func, self.iterator))
+    def filter(self, func):
+        return i(filter(func, self.iterator))
+    def reduce(self, func):
+        li = list(self.iterator)
+        acc = []
+        for index, cur in enumerate(li):
+            # accにコールバック関数で文字列追加
+            func(acc, cur, index, li)
+        return i(iter(acc))
+    def to_list(self):
+        it1, it2 = itertools.tee(self.iterator, 2)
+        self.iterator = it1
+        self.output_list = list(it2)
+        return self
+    def join(self, sep): # sep: "\n"等
+        self.output_str = sep.join(self.output_list)
+        return self
+    def to_save(self, file_path):
+        with open(file_path, 'w', encoding='utf-8', newline='\n') as f:
+            f.writelines(self.output_str)
+        return self
+        
+-----------------------------------------------     
+# コールバック関数
+def reduce_call_back(acc, cur, i, arr):
+    acc.append(f'		public void add{arr[i]}(String {arr[i].lower()}) {{')
+    acc.append(f'			this.{arr[i].lower()}.add({arr[i].lower()});')
+    acc.append('		}')
+
+
+import sys
+import re
+bf = sys.stdin.read().split("\n")
+af = i(bf).map(lambda x: re.match("  (.*?) (.*?)[\s,].*", x)).map(lambda y: y.group(1) if y else None).filter(lambda x: x != None).reduce(reduce_call_back).to_list()
+
+af = i(bf).map(lambda x: re.match("  (.*?) (.*?)[\s,].*", x)).map(lambda y: y.group(1) if y else None).filter(lambda x: x != None).reduce(reduce_call_back).to_save("mt1.txt")
+
+af = i(bf).map(lambda x: re.match("  (.*?) (.*?)[\s,].*", x)).map(lambda y: y.group(1) if y else None).filter(lambda x: x != None).reduce(reduce_call_back).to_list().join("\n").to_save("mt1.txt")
+
+
+
+
+###################################################################################################
+# 以下は使い型の例
+# (例)reduceのコールバック関数
+def reduce_call_back(acc, cur, i, arr):
+    acc.append(f'ーーー {i+1}行目のテーブル定義 ーーー')
+    acc.append(f'カラム名は、{arr[i][0].lower()}です。')
+    acc.append(f'型は、{arr[i][1].upper()}です。')
+
+if __name__ == '__main__':
+    import re
+
+    # リスト関連の操作をメソッドチェーンで使う例
+    read_str = """
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        is_positive boolean not null DEFAULT TRUE,
+        exp_val text,
+        ins_date timestamp with time zone not null,
+    """
+    af = ListMc(read_str.split("\n")) \
+        .map(lambda x: re.match(".*?([a-zA-Z_]+) (.*?)[\s,].*", x)) \
+        .map(lambda y: (y.group(1), y.group(2)) if y else None) \
+        .filter(lambda x: x != None) \
+        .reduce(reduce_call_back) \
+        .to_list().join("\n") \
+        .to_save("mc1.txt")
+
+
+
+import sys
+import re
+from mylib.mc.op_list import ListMc
+
+
+bf = sys.stdin.read().split("\n")
+af = op_list.ListMc(bf).map(lambda x: re.match(".*?([a-zA-Z_]+) (.*?)[\s,].*", x)).map(lambda y: (y.group(1), y.group(2)) if y else None).filter(lambda x: x != None).reduce(reduce_call_back).to_list().join("\n").to_save("mc1.txt")
+
+af = ListMc(bf) \
+    .map(lambda x: re.match(".*?([a-zA-Z_]+) (.*?)[\s,].*", x)) \
+    .map(lambda y: (y.group(1), y.group(2)) if y else None) \
+    .filter(lambda x: x != None) \
+    .reduce(reduce_call_back) \
+    .to_list().join("\n") \
+    .to_save("mc2.txt")
+
+
+
+af = ListMc(bf) \
+    .map(lambda x: re.match(".*?([a-zA-Z_]+) (.*?)[\s,].*", x)) \
+    .map(lambda y: (y.group(1), y.group(2)) if y else None) \
+    .filter(lambda x: x != None) \
+    .reduce(lambda acc, cur, i, arr:
+        [
+           acc.append(f'ーーー {i+1}行目のテーブル定義 ーーー'),
+    	   acc.append(f'カラム名は、{arr[i][0].lower()}です。'),
+    	   acc.append(f'型は、{arr[i][1].upper()}です。'),
+        ]
+    ) \
+    .to_list().join("\n") \
+    .to_save("mc1.txt")
+
+

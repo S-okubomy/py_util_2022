@@ -1,0 +1,21 @@
+		public void addid(String id) {
+			this.$id.add(id);
+		}
+		public void addis_positive(String is_positive) {
+			this.$is_positive.add(is_positive);
+		}
+		public void addexp_val(String exp_val) {
+			this.$exp_val.add(exp_val);
+		}
+		public void addobj_val(String obj_val) {
+			this.$obj_val.add(obj_val);
+		}
+		public void addins_date(String ins_date) {
+			this.$ins_date.add(ins_date);
+		}
+		public void addupdate_date(String update_date) {
+			this.$update_date.add(update_date);
+		}
+		public void adddel_flag(String del_flag) {
+			this.$del_flag.add(del_flag);
+		}
