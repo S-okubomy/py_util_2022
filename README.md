@@ -63,7 +63,7 @@ j_type = {
 def cnv_camel_case(v_name):
     return ListMc(v_name.lower().split("_")) \
         .reduce(lambda acc, cur, i, arr: acc.append(cur.capitalize()) if i !=0 else acc.append(cur)) \
-        .to_list().join("").output_str
+        .to_list().join("").val
 
 # （例）標準入力で以下の文字列読み取り
 bf = sys.stdin.read().split("\n")
@@ -106,6 +106,12 @@ af = ListMc(bf) \
 # Pythonのインタラクティブシェルで打ったコマンドをファイルに保存
 import readline
 readline.write_history_file('history1.py')
+
+# モジュールの再読込
+import importlib
+import mylib
+importlib.reload(mylib.mc.op_list)
+from mylib.mc.op_list import ListMc
 ```
 
 ### …or create a new repository on the command line
