@@ -101,6 +101,17 @@ af = ListMc(bf) \
 
 ```
 
+### 例２
+```
+# https://atcoder.jp/contests/math-and-algorithm/tasks/math_and_algorithm_h
+>>> n, s = map(int, input().split())
+869 120
+>>> ListMc([r_num + b_num for r_num in range(1,n+1) for b_num in range(1,n+1)]).filter(lambda x: x <= s).reduce(lambda acc, cur: acc + 1, 0).val
+7140
+
+```
+
+
 ### other 
 ```
 # Pythonのインタラクティブシェルで打ったコマンドをファイルに保存
