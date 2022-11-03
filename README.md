@@ -110,6 +110,9 @@ af = ListMc(bf) \
 >>> ListMc([r_num + b_num for r_num in range(1,n+1) for b_num in range(1,n+1)]).filter(lambda x: x <= s).reduce(lambda acc, cur: acc + 1, 0).val
 7140
 
+>>> a = ListMc(range(1,n+1)).map(lambda i: ListMc(range(1,n+1)).map(lambda j: j+i).to_list().list).flatten().filter(lambda x: x <= s).to_list().count()
+>>> a.val
+7140
 ```
 
 

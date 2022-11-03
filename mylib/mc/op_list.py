@@ -1,5 +1,7 @@
 import itertools
 import inspect
+import functools
+import operator
 
 class ListMc(object):
     def __init__(self, iterator):
@@ -44,6 +46,14 @@ class ListMc(object):
             else:
                 raise ValueError("Incorrect number of arguments")
             self.val = acc
+        return self
+    def flatten(self):
+        flat_list = functools.reduce(operator.add, list(self.iterator))
+        self.iterator = iter(flat_list)
+        self.list = flat_list
+        return self
+    def count(self):
+        self.val = len(self.list)
         return self
     def to_list(self):
         it1, it2 = itertools.tee(self.iterator, 2)
