@@ -115,6 +115,15 @@ af = ListMc(bf) \
 7140
 ```
 
+### 例3
+```
+#https://atcoder.jp/contests/math-and-algorithm/submissions/36250286
+>>> n = int(input())
+10
+>>> import math
+>>> ans = ListMc(range(2,n+1)).filter(lambda x: not ListMc(range(2, int(math.sqrt(x)+1))).any(lambda i: x % i == 0)).map(lambda x: str(x)).to_list().join(" ").val
+```
+
 
 ### other 
 ```

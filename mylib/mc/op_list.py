@@ -52,6 +52,12 @@ class ListMc(object):
         self.iterator = iter(flat_list)
         self.list = flat_list
         return self
+    def any(self, func):
+        li = list(self.iterator)
+        for item in li:
+            if func(item):
+                return True
+        return False
     def count(self):
         self.val = len(self.list)
         return self
