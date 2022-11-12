@@ -3,15 +3,15 @@ import inspect
 import functools
 import operator
 
-class ListMc(object):
+class li(object):
     def __init__(self, iterator):
         self.iterator = iterator
         self.list = []
         self.val = ""
     def map(self, func):
-        return ListMc(map(func, self.iterator))
+        return li(map(func, self.iterator))
     def filter(self, func):
-        return ListMc(filter(func, self.iterator))
+        return li(filter(func, self.iterator))
     def reduce(self, func, default_init_val = None):
         li = list(self.iterator)
         if default_init_val is None:
@@ -93,7 +93,7 @@ if __name__ == '__main__':
         exp_val text,
         ins_date timestamp with time zone not null,
     """
-    af = ListMc(read_str.split("\n")) \
+    af = li(read_str.split("\n")) \
         .map(lambda x: re.match(".*?([a-zA-Z_]+) (.*?)[\s,].*", x)) \
         .map(lambda y: (y.group(1), y.group(2)) if y else None) \
         .filter(lambda x: x != None) \

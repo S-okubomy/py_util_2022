@@ -6,7 +6,7 @@
 $ python3
 
 # 作ったUtilを読み込み
->>> from mylib.mc.op_list import ListMc
+>>> from mylib.mc.op_list import li
 >>> import sys
 >>> import re
 
@@ -24,7 +24,7 @@ $ python3
 
 # 以下のコードを貼り付けます。
 # (「mc1.txt」と言うファイルが作成されます)
-af = ListMc(bf) \
+af = li(bf) \
     .map(lambda x: re.match(".*?([a-zA-Z_]+) (.*?)[\s,].*", x)) \
     .map(lambda y: (y.group(1), y.group(2)) if y else None) \
     .filter(lambda x: x != None) \
@@ -50,7 +50,7 @@ $ python3
 # 作ったUtilを読み込み
 import sys
 import re
-from mylib.mc.op_list import ListMc
+from mylib.mc.op_list import li
 
 j_type = {
     "INTEGER": "int",
@@ -61,7 +61,7 @@ j_type = {
 }
 
 def cnv_camel_case(v_name):
-    return ListMc(v_name.lower().split("_")) \
+    return li(v_name.lower().split("_")) \
         .reduce(lambda acc, cur, i, arr: acc.append(cur.capitalize()) if i !=0 else acc.append(cur)) \
         .to_list().join("").val
 
@@ -79,7 +79,7 @@ bf = sys.stdin.read().split("\n")
 
 # 以下のコードを貼り付けます。
 # (「exam1.txt」と言うファイルが作成されます)
-af = ListMc(bf) \
+af = li(bf) \
     .map(lambda x: re.match(".*?([a-zA-Z_]+) (.*?)[\s,].*", x)) \
     .map(lambda y: (y.group(1), y.group(2)) if y else None) \
     .filter(lambda x: x != None) \
@@ -107,10 +107,10 @@ af = ListMc(bf) \
 # https://atcoder.jp/contests/math-and-algorithm/submissions/36173535
 >>> n, s = map(int, input().split())
 869 120
->>> ListMc([r_num + b_num for r_num in range(1,n+1) for b_num in range(1,n+1)]).filter(lambda x: x <= s).reduce(lambda acc, cur: acc + 1, 0).val
+>>> li([r_num + b_num for r_num in range(1,n+1) for b_num in range(1,n+1)]).filter(lambda x: x <= s).reduce(lambda acc, cur: acc + 1, 0).val
 7140
 
->>> a = ListMc(range(1,n+1)).map(lambda i: ListMc(range(1,n+1)).map(lambda j: j+i).to_list().list).flatten().filter(lambda x: x <= s).to_list().count()
+>>> a = li(range(1,n+1)).map(lambda i: li(range(1,n+1)).map(lambda j: j+i).to_list().list).flatten().filter(lambda x: x <= s).to_list().count()
 >>> a.val
 7140
 ```
@@ -121,7 +121,7 @@ af = ListMc(bf) \
 >>> n = int(input())
 10
 >>> import math
->>> ans = ListMc(range(2,n+1)).filter(lambda x: not ListMc(range(2, int(math.sqrt(x)+1))).any(lambda i: x % i == 0)).map(lambda x: str(x)).to_list().join(" ").val
+>>> ans = li(range(2,n+1)).filter(lambda x: not li(range(2, int(math.sqrt(x)+1))).any(lambda i: x % i == 0)).map(lambda x: str(x)).to_list().join(" ").val
 ```
 
 
@@ -135,7 +135,7 @@ readline.write_history_file('history1.py')
 import importlib
 import mylib
 importlib.reload(mylib.mc.op_list)
-from mylib.mc.op_list import ListMc
+from mylib.mc.op_list import li
 ```
 
 ### …or create a new repository on the command line
