@@ -36,7 +36,7 @@ af = li(bf) \
         ]
     ) \
     .to_list().join("\n") \
-    .to_save("mc1.txt")
+    .save("mc1.txt")
 ```
 
 ### 例1
@@ -97,7 +97,7 @@ af = li(bf) \
         ]
     ) \
     .to_list().join("\n") \
-    .to_save("exam1.txt")
+    .save("exam1.txt")
 
 ```
 
@@ -136,6 +136,12 @@ import importlib
 import mylib
 importlib.reload(mylib.mc.op_list)
 from mylib.mc.op_list import li
+
+# main実行
+python3 mylib/mc/op_list.py 
+
+# Unit test実行方法
+python3 -m unittest mylib/mc/op_list.py 
 ```
 
 ### …or create a new repository on the command line

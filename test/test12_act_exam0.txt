@@ -1,0 +1,48 @@
+ーーー 1行目のテーブル定義より ーーー
+private int id;
+public setId(int id) {
+    this.id = id;
+}
+public int getId() {
+    return id;
+}
+ーーー 2行目のテーブル定義より ーーー
+private XXX isPositive;
+public setIspositive(XXX isPositive) {
+    this.isPositive = isPositive;
+}
+public XXX getIsPositive() {
+    return isPositive;
+}
+ーーー 3行目のテーブル定義より ーーー
+private float colVal;
+public setColval(float colVal) {
+    this.colVal = colVal;
+}
+public float getColVal() {
+    return colVal;
+}
+ーーー 4行目のテーブル定義より ーーー
+private String objVal;
+public setObjval(String objVal) {
+    this.objVal = objVal;
+}
+public String getObjVal() {
+    return objVal;
+}
+ーーー 5行目のテーブル定義より ーーー
+private Date insDate;
+public setInsdate(Date insDate) {
+    this.insDate = insDate;
+}
+public Date getInsDate() {
+    return insDate;
+}
+ーーー 6行目のテーブル定義より ーーー
+private boolean delFlag;
+public setDelflag(boolean delFlag) {
+    this.delFlag = delFlag;
+}
+public boolean getDelFlag() {
+    return delFlag;
+}
