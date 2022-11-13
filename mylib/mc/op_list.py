@@ -25,38 +25,30 @@ class li(object):
     def filter(self, func):
         return li(filter(func, self.iterator))
     def reduce(self, func, default_init_val = None):
+        def get_func_res(args_len, func, acc, cur, index):
+            if args_len == 2:
+                acc = func(acc, cur)
+            elif args_len == 3:
+                acc = func(acc, cur, index)
+            elif args_len == 4:
+                acc = func(acc, cur, index, li)
+            else:
+                raise TypeError("Incorrect number of arguments")
+            return acc
         li = list(self.iterator)
         if default_init_val is None:
             default_init_val = []
         acc = default_init_val
         args_len = len(inspect.getfullargspec(func).args)
-        # print(f'確認数: {args_len}')
         if isinstance(acc, list):
-            if args_len == 2:
-                for index, cur in enumerate(li):
-                    func(acc, cur)
-            elif args_len == 3:
-                for index, cur in enumerate(li):
-                    func(acc, cur, index)
-            elif args_len == 4:
-                for index, cur in enumerate(li):
-                    func(acc, cur, index, li)
-            else:
-                raise TypeError("Incorrect number of arguments")
+            for index, cur in enumerate(li):
+                # リストの場合、accは参照渡しでfunc内でappendされる前提なので、リターンされるaccは未使用。
+                get_func_res(args_len, func, acc, cur, index)
             self.iterator = iter(acc)
             self.list = acc
         else:
-            if args_len == 2:
-                for index, cur in enumerate(li):
-                    acc = func(acc, cur)
-            elif args_len == 3:
-                for index, cur in enumerate(li):
-                    acc = func(acc, cur, index)
-            elif args_len == 4:
-                for index, cur in enumerate(li):
-                    acc = func(acc, cur, index, li)
-            else:
-                raise TypeError("Incorrect number of arguments")
+            for index, cur in enumerate(li):
+                acc = get_func_res(args_len, func, acc, cur, index)
             self.val = acc
         return self
     def flatten(self):
