@@ -330,8 +330,8 @@ from bs4 import BeautifulSoup as bs
 url = "https://xxxxx/001.html"
 res = requests.get(url)
 res.encoding = res.apparent_encoding  # 文字化け対策
+soup = bs(res.text.replace("\n", ""), "html.parser")  # 改行全部消す
 li(soup.select("br")).map(lambda e: e.replace_with("\n")).exe(lambda : soup.select("tt")[0].text.replace("\u3000","")).save("o1.txt")
 
-soup = bs(res.text.replace("\n", ""), "html.parser")  # 改行全部消す
 li(soup.select("br")).map(lambda e: e.replace_with("\n"))  # brタグを改行とする
 elt = soup.select("tt")[0].text.replace("\u3000", "")
