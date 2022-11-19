@@ -62,6 +62,9 @@ class li(object):
             if func(item):
                 return True
         return False
+    def exe(self, func): # sep: "\n"等
+        self.val = func()
+        return self
     def count(self):
         self.val = len(self.list)
         return self
