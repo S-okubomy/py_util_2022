@@ -124,6 +124,19 @@ af = li(bf) \
 >>> ans = li(range(2,n+1)).filter(lambda x: not li(range(2, int(math.sqrt(x)+1))).any(lambda i: x % i == 0)).map(lambda x: str(x)).to_list().join(" ").val
 ```
 
+### 例４
+```
+from mylib.mc.op_list import li
+import requests
+from bs4 import BeautifulSoup as bs
+
+url = "https://xxxxxxxx/001.html"
+res = requests.get(url)
+res.encoding = res.apparent_encoding  # 文字化け対策
+soup = bs(res.text.replace("\n", ""), "html.parser")  # 改行全部消す
+li(soup.select("br")).map(lambda e: e.replace_with("\n")).exe(lambda : soup.select("tt")[0].text.replace(" " * 24, "")).save("o1.txt") # brタグを改行とする
+```
+
 
 ### other 
 ```

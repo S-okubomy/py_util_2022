@@ -62,8 +62,12 @@ class li(object):
             if func(item):
                 return True
         return False
-    def exe(self, func): # sep: "\n"等
-        self.val = func()
+    def exe(self, func):
+        res = func()
+        if isinstance(res, list):
+            self.list = res
+        else:
+            self.val = res
         return self
     def count(self):
         self.val = len(self.list)
@@ -312,6 +316,20 @@ class TestOpList(unittest.TestCase):
         import math
         act1 = li(range(2,n+1)).filter(lambda x: not li(range(2, int(math.sqrt(x)+1))).any(lambda i: x % i == 0)).map(lambda x: str(x)).to_list().join(" ").val
         self.assertEqual(act1, '2 3 5 7')
+
+    def test15_exe1(self):
+        arr = ["aa", "bb", "cc"]
+        act1 = li(arr).map(lambda a: arr.append(a + ":add")).exe(lambda : arr[1:len(arr)-1])
+        self.assertEquals(act1.list, ['bb','cc','aa:add','bb:add'])
+
+    def test16_exec2(self):
+        arr = ["aa", "bb", "cc"]
+        act1 = li(arr).map(lambda a: arr.append(a + ":add")).exe(lambda : "\n".join(arr))
+        # print(act1.val)
+        self.assertEquals(act1.val, "aa\nbb\ncc\naa:add\nbb:add\ncc:add")
+
+
+
 
 
 ###################################################################################################
