@@ -62,6 +62,19 @@ class li(object):
             if func(item):
                 return True
         return False
+    def for_each(self, func):
+        def get_func_res(args_len, func, val, index):
+            if args_len == 1:
+                func(val)
+            elif args_len == 2:
+                func(val, index)
+            else:
+                raise TypeError("Incorrect number of arguments")
+        li = list(self.iterator)
+        args_len = len(inspect.getfullargspec(func).args)
+        for index, val in enumerate(li):
+            get_func_res(args_len, func, val, index)
+        return self
     def exe(self, func):
         res = func()
         if isinstance(res, list):
@@ -320,13 +333,31 @@ class TestOpList(unittest.TestCase):
     def test15_exe1(self):
         arr = ["aa", "bb", "cc"]
         act1 = li(arr).map(lambda a: arr.append(a + ":add")).exe(lambda : arr[1:len(arr)-1])
-        self.assertEquals(act1.list, ['bb','cc','aa:add','bb:add'])
+        self.assertEqual(act1.list, ['bb','cc','aa:add','bb:add'])
 
     def test16_exec2(self):
         arr = ["aa", "bb", "cc"]
         act1 = li(arr).map(lambda a: arr.append(a + ":add")).exe(lambda : "\n".join(arr))
         # print(act1.val)
-        self.assertEquals(act1.val, "aa\nbb\ncc\naa:add\nbb:add\ncc:add")
+        self.assertEqual(act1.val, "aa\nbb\ncc\naa:add\nbb:add\ncc:add")
+
+    def test17_for_each(self):
+        act_arr1 = []
+        li([0,1,2,3]).map(lambda x: 2 * x).for_each(lambda x: act_arr1.append(x+1))
+        self.assertEqual(act_arr1, [1,3,5,7])
+
+        act_arr2 = []
+        li([0,1,2,3]).map(lambda x: 2 * x).for_each(lambda x, i: act_arr2.append((i, x+1)))
+        self.assertEqual(act_arr2, [(0,1),(1,3),(2,5),(3,7)])
+
+        # 例外のメッセージも含めてテスト(引数の数が不正な場合、エラーとなること)
+        with self.assertRaises(TypeError) as cm:
+            li([0,1,2,3]).for_each(lambda : "error test")
+        self.assertEqual(cm.exception.args[0], "Incorrect number of arguments")
+
+        with self.assertRaises(TypeError) as cm:
+            li([0,1,2,3]).for_each(lambda val, index, err_arg: "error test")
+        self.assertEqual(cm.exception.args[0], "Incorrect number of arguments")
 
 
 
