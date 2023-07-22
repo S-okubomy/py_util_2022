@@ -5,6 +5,7 @@ from mylib.mc.op_list import li
 import datetime
 import numpy as np
 from numpy import linalg as lg
+from janome.tokenizer import Tokenizer
 
 sys.setrecursionlimit(2000)
 
@@ -16,9 +17,9 @@ def run():
     #print(new_sen)
 
 
-def get_dic(st_data):
+def get_dic(st_lst):
     dic_set = set()
-    li(st_data.split(" ")).map(lambda s: dic_set.add(s))
+    li(st_lst).map(lambda s: dic_set.add(s))
     
     dic_set_sort = sorted(dic_set, reverse=False)
     print(dic_set_sort)
@@ -33,19 +34,18 @@ def get_dic(st_data):
 
 
 def tmp1():
-    st_data = "what is important ? test is important . what is your favorit ? i like meal . what is important ? water is important ."
-    X_st_data = "Outside the window on the 50th floor of the Shinjuku Nomura \
-    Building is the night view of Shinjuku buildings . The twinkling lights as \
-    far as the eye can see are so enchantingly beautiful that it is as if you \
-    have wandered into the stars. The restaurant offers a variety of \
-    gastronomic delights that combine the quintessential techniques of \
-    traditional Japanese cuisine with carefully selected ingredients from all \
-    over Japan . We will create a wonderful atmosphere for your special \
-    occasion , such as an anniversary , celebration , or marriage proposal. "
+    st_data = "こんにちは。今日も暑いです。熱中症に気を付けます。\
+            熱中症を防ぐにはどうしたら良いですか？ 睡眠と水分を十分取ります。"
+    st_data += "方法はいくつかあります。良い方法を教えます。睡眠が大事です。 \
+    快適な温度を教えてください。エアコンは25度が快適です。 場所を教えてください。東京です。\
+     "
+    que = "快適なエアコンの温度は何度ですか？"
 
+    t = Tokenizer()
+    st_lst = get_wakachi(t, st_data)
 
-    dic = get_dic(st_data)
-    d, m = get_np(st_data, dic)
+    dic = get_dic(st_lst)
+    d, m = get_np(st_lst, dic)
 
     len_i, len_j = d.shape
     print(len_i, len_j)
@@ -53,13 +53,16 @@ def tmp1():
     for i in range(len_i):
         d_map[i] = (d[i], m[i])
 
-    sentence = get_sentence(dic,"", "what is your favorit ?", d_map)
+    sentence = get_sentence(dic,"", que, d_map, t)
     print(sentence)
 
-def get_next_word(dic, prev_sentence, d_map):
+def get_wakachi(t, st_data):
+    return [token.surface for token in t.tokenize(st_data) if not token.surface.isspace()]
+
+def get_next_word(dic, prev_sentence, d_map, t):
     len_w = len(d_map[0][0])
     print(prev_sentence)
-    cnv_arr = li(prev_sentence.strip().split(" ")).map(lambda s: dic.get(s)).list
+    cnv_arr = li(get_wakachi(t, prev_sentence)).map(lambda s: dic.get(s) if dic.get(s) != None else 0).list
     trg = np.array(zero_ume(cnv_arr, len_w))
     print(trg)
     cos_sort_lst = get_cos_sort(trg, d_map)
@@ -80,22 +83,13 @@ def get_cos_sort(trg, d_map):
     return lst        
 
 
-def get_sentence(dic, sentence, cur_word, d_map):
-    sentence +=  cur_word + " "
-    next_word = get_next_word(dic, sentence, d_map)
-    if next_word == "." or len(sentence) > 500:
-        return sentence + "."
+def get_sentence(dic, sentence, cur_word, d_map, t):
+    sentence +=  cur_word
+    next_word = get_next_word(dic, sentence, d_map, t)
+    if next_word == "。" or len(sentence) > 500:
+        return sentence + "。"
 
-    return get_sentence(dic, sentence, next_word, d_map)
-
-def X_get_next_word(dic, prev_word, w):
-    cnv_arr = li(prev_word.split(" ")).map(lambda s: dic.get(s)).list
-    x = np.array(zero_ume(cnv_arr,10))
-    print(x)
-    next_val = (x @ w)[0]
-    next_word = inv_dic(dic).get(round(next_val))
-    print(f'{next_val} : {next_word}')
-    return next_word
+    return get_sentence(dic, sentence, next_word, d_map, t)
 
 def cos_sim(v1, v2):
     return v1 @ v2 / (lg.norm(v1) * lg.norm(v2))
@@ -110,12 +104,8 @@ def aten():
     pass
 
 def div_data(words):
-    #words = li(sentence.split(" ")).map(lambda s: dic.get(s)).list
     lds = words[0:-1]
-    #lds.extend(words[0:-1])
     mds = words[-1]
-    #for _ in range(len(lds), w_len):
-    #    lds.append(0)
     return (lds, mds)
 
 def zero_ume(arr, len_w):
@@ -126,8 +116,8 @@ def inv_dic(dic):
     return { v:k for k,v in dic.items() } 
 
 
-def get_np(st_data, dic):
-    cnv_lst = li(st_data.split(" ")).map(lambda s : dic.get(s)).list
+def get_np(st_lst, dic):
+    cnv_lst = li(st_lst).map(lambda s : dic.get(s)).list
     print(cnv_lst)
 
 
@@ -144,58 +134,6 @@ def get_np(st_data, dic):
             # print(f'{d} : {m}')
     
     return (d_arr, m_arr)
-
-
-def X_get_np():
-    lst = ["what is important ? test is important .", "what is your favorit ? i like meal .", "what is important ? water is important .", "what is your favorit meal .", "what is your favorit water" ]
-    dic = { "what":1, "important":2, "is":3, "test":4, "meal":5, "water":6, "?":7, ".":8, "your":9, "favorit":10, "i":11, "like":12 }
-    cnv_lst = li(lst).map(lambda s: li(s.split(" ")).map(lambda ss: dic.get(ss)).list).list
-  
-    print(cnv_lst)
-    #print(div_data(dic, "what is important ? test", 10))
-
-    all_word_len = li(lst).reduce(lambda acu, cur, i, arr: acu + len(arr), 0).val
-    print(all_word_len)
-    
-    d_arr = np.empty((0, 10), dtype=int)
-    m_arr = np.array([])
-    s_map = {}
-    for arr in cnv_lst:
-        for i in range(1,len(arr)):
-            d, m = div_data(arr[0:i+1])
-            # print(zero_ume(d, 10))
-            dn = np.array([zero_ume(d, 10)])
-            d_arr = np.append(d_arr,dn, axis=0)
-            m_arr = np.append(m_arr,m)
-            #s_map[d] = m
-            print(f'{d} : {m}') 
-
-    print(s_map)
-    return (d_arr, m_arr)
-
-def X_get_next_word():
-    lst = ["what is important ? test is important .", "what is your favorit ? i like meal .", "what is important ? water is important .", "what is your favorit meal .", "what is your favorit water" ]
-    dic = { "what":1, "important":2, "is":3, "test":4, "meal":5, "water":6, "?":7, ".":8, "your":9, "favorit":10, "i":11, "like":12 }
-    cnv_lst = li(lst).map(lambda s: li(s.split(" ")).map(lambda ss: dic.get(ss)).list).list
-  
-    print(cnv_lst)
-    #print(div_data(dic, "what is important ? test", 10))
-
-    all_word_len = li(lst).reduce(lambda acu, cur, i, arr: acu + len(arr), 0).val
-    print(all_word_len)
-    
-    d_lst = []
-    m_lst = []
-    for arr in cnv_lst:
-        for i in range(1,len(arr)):
-            d, m = div_data(arr[0:i+1])
-            # print(zero_ume(d, 10))
-            d_lst.append(d)
-            m_lst.append(m)
-
- 
-    return {"test":1}
-
 
 
 if __name__ == '__main__':
