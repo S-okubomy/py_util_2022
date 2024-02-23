@@ -137,6 +137,33 @@ soup = bs(res.text.replace("\n", ""), "html.parser")  # 改行全部消す
 li(soup.select("br")).map(lambda e: e.replace_with("\n")).exe(lambda : soup.select("tt")[0].text.replace(" " * 24, "")).save("o1.txt") # brタグを改行とする
 ```
 
+### bpython用
+●python バージョンアップ方法
+https://qiita.com/murakami77/items/b612734ff209cbb22afb
+https://bpython-interpreter.org/
+
+●pip install 任意の場所
+```
+pip install greenlet -t /home/okubo/.local/lib/python3.9/site-packages
+pip install bpython==0.23
+```
+
+●パッケージインストール、削除
+```
+sudo apt install bpython
+sudo apt purge bpython
+```
+
+●python
+```
+exp =li(sys.stdin.readlines()).map(lambda s: s.rstrip()).map(lambda s: re.match(".*ftp\://(.*?)\:.*", s)).map(lambda m: m.group(1) if m else None).list
+exp_non = [e for e in exp if not e in act]; act_non = [a for a in act if not a in exp]; print(exp_non); print(act_non)
+```
+
+```
+af = li().rd("tmp.txt").split("\n").map(lambda s: re.match(".*(// \[.*?\].*)", s)).map(lambda m: m.group(1) if m else None).filter(lambda s: s != None).map(lambda s: re.sub("---+", "", s)).join("\n").save("out1.txt")
+```
+
 
 ### other 
 ```

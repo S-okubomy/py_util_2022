@@ -106,6 +106,10 @@ class li(object):
         with open(file_path, 'r', encoding='utf-8') as f:
             self.val = f.read().rstrip()
         return self
+    def rd(self, file_path):
+        with open(file_path, 'r', encoding='utf-8') as f:
+            self.val = f.read()
+        return self
 
 
 ###################################################################################################
