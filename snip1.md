@@ -21,10 +21,25 @@ next = start.timestamp() + prio.total_seconds() * rate
 print(datetime.datetime.fromtimestamp(next))
 ```
 
+●format
 ```
 # 2進数0埋め
 >>> f'{256:016b}'
 '0000000100000000'
+```
+
+●複利
+```
+def disp_loan(zandaka, kinri, hensai, kikan=100):
+    init_zan = zandaka; nen_hensai = hensai * 12; hg = nen_hensai;
+    for y in range(kikan):
+        zandaka += (zandaka * kinri/100) - nen_hensai;
+        if zandaka <= 0:
+            return
+        print(f'{y+1}年目({38+y})才: zan={zandaka:,.0f}, hg={hg:,.0f} risoku={hg-init_zan:,}')
+        hg += nen_hensai;
+
+>>> disp_loan(34_900_000, 0.45, 89_826) 
 ```
 
 ### コマンド
