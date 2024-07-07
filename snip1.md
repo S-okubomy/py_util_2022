@@ -85,6 +85,12 @@ find ./ -type f -name "*.tar.gz" -exec tar -xzf {} \;
 ```
 #カンマ、あってもなくても
 li(["  , a1 xxx", "a2 xxx", "  a3 xxx"]).map(lambda s: re.match("\s{2},?\s?(.*?)\s.*", s)).map(lambda m: m.group(1) if m else None).filter(lambda s: s != None).list
+
+#否定先読み
+.+\.(?!md).+
+#否定後読み
+(?<!東)京都
+https://qiita.com/TomK/items/6bdb238d642c29452e0c
 ```
 
 ### その他 参考文献
